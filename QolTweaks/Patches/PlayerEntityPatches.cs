@@ -17,7 +17,7 @@ internal static class PlayerEntityPatches
         {
             if (!World.player.dead && !World.player.inMenu)
             {
-                if (QolTweaks.quick_stack_nearby.WasPressedBeforeTick()) {
+                if (GamePatches.quick_stack_nearby.WasPressedBeforeTick()) {
                     World.player.QuickStackToNearbyChests(Game.worldManager.world);
                 }
             }

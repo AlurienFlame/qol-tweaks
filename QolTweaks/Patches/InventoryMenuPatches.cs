@@ -14,7 +14,7 @@ internal static class InventoryMenuPatches
         [HarmonyPostfix]
         private static void Postfix()
         {
-            if (QolTweaks.sort.WasPressedBeforeTick())
+            if (GamePatches.sort.WasPressedBeforeTick())
             {
                 if (Game.menu_inventory.show)
                 {
