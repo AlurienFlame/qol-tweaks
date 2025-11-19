@@ -1,16 +1,11 @@
 # Qol Tweaks
-
-### building
-
-building in `Debug` configuration will automatically copy the mod to the 'mods/' directory of your game:
-
+Build-and-run on linux: 
 ```
 dotnet build -c Debug
+cd ~/.local/share/Steam/steamapps/common/Allumeria\ Playtest/
+wine "Allumeria.exe"
 ```
-
-but building in `Release` configuration won't copy it anywhere other than build folder (
-`ExampleMod/bin/Release/net9.0/`):
-
+Package for distribution:
 ```
 dotnet build -c Release
 ```

@@ -1,20 +1,21 @@
 using Allumeria;
-using Allumeria.UI.Menus;
+using Allumeria.EntitySystem.Entities;
 using HarmonyLib;
 
-namespace ExampleMod.Patches;
+
+namespace QolTweaks.Patches;
 
 // https://harmony.pardeike.net/articles/intro.html
 [HarmonyPatch]
-internal static class MainMenuPatches
+internal static class PlayerEntityPatches
 {
-    [HarmonyPatch(typeof(MainMenu), nameof(MainMenu.BuildMenu))]
+    [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.Tick))]
     private static class BuildMenuPatch
     {
         [HarmonyPostfix]
         private static void Postfix()
         {
-            Logger.Info("Hello from example mod!");
+            Logger.Info("Hello from PlayerEntity!");
         }
     }
 }
