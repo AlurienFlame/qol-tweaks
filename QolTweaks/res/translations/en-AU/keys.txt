@@ -1,0 +1,2 @@
+keybind.quick_stack_nearby Quick Stack to Nearby Chests
+keybind.sort Sort Inventory

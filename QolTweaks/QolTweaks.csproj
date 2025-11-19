@@ -13,5 +13,10 @@
     </PropertyGroup>
 
     <Import Project="..\ignitron\build\Mod.targets"/>
+    
+    <!-- This will fail on windows. Manually copy the `res` folder into the build destination. -->
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="cp -rf &quot;$(ProjectDir)res/.&quot; &quot;$(ALLUMERIA_GAME_DIR)/mods/$(MSBuildProjectName)/res/&quot;" />
+    </Target>
 
 </Project>
