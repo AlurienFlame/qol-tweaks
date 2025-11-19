@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="ExampleMod\ExampleMod.csproj" />
+  <Project Path="QolTweaks\QolTweaks.csproj" />
   <Project Path="ignitron\Ignitron.Loader\Ignitron.Loader.csproj" />
 </Solution>

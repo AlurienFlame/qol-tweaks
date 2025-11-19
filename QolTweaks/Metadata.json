@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/danilwhale/ignitron/refs/heads/master/Metadata.schema.json",
   "schema_version": 2,
-  "assembly_relative_path": "ExampleMod.dll",
-  "id": "example_mod",
-  "display_name": "Example Mod",
+  "assembly_relative_path": "QolTweaks.dll",
+  "id": "qol_tweaks",
+  "display_name": "QOL Tweaks",
   "contributors": [
     {
-      "name": "danilwhale",
+      "name": "AlurienFlame",
       "role": "developer"
     }
   ],
@@ -14,15 +14,10 @@
   "dependencies": [
     {
       "id": "allumeria",
-      "version": "0.10"
-    },
-    {
-      "id": "shitfuck",
-      "version": "0.69.420",
-      "type": "recommended"
+      "version": "0.11"
     }
   ],
   "entrypoints": [
-    "ExampleMod.ExampleMod"
+    "QolTweaks.QolTweaks"
   ]
 }

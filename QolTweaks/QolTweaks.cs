@@ -2,9 +2,9 @@ using Allumeria;
 using HarmonyLib;
 using Ignitron.Loader;
 
-namespace ExampleMod;
+namespace QolTweaks;
 
-public sealed class ExampleMod : IModEntrypoint
+public sealed class QolTweaks : IModEntrypoint
 {
     public void Main(ModBox box)
     {
@@ -15,7 +15,7 @@ public sealed class ExampleMod : IModEntrypoint
 
         // https://harmony.pardeike.net/articles/intro.html
         // initialise harmony
-        Harmony harmony = new("io.github.danilwhale.ExampleMod");
+        Harmony harmony = new("io.github.alurienflame.QolTweaks");
         harmony.PatchAll();
 
         Logger.Info("Hello, World!");
