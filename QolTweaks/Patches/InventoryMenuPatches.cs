@@ -1,6 +1,6 @@
 using Allumeria;
-using Allumeria.UI.Menus;
 using Allumeria.Input;
+using Allumeria.UI.Menus;
 using HarmonyLib;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -11,7 +11,7 @@ namespace QolTweaks.Patches;
 internal static class InventoryMenuPatches
 {
     public static InputChannel sort = new InputChannel("sort", MouseButton.Button3);
-    
+
     [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.Update))]
     private static class UpdatePatch
     {
@@ -20,8 +20,8 @@ internal static class InventoryMenuPatches
         {
             if (sort.WasPressedBeforeTick())
             {
-                if (Game.menu_inventory.show) {
-                    Logger.Info("Sorting due to mouse wheel press.");
+                if (Game.menu_inventory.show)
+                {
                     Game.menu_inventory.containerController.inventory.Sort();
                     if (Game.menu_inventory.chestPanel.show)
                     {
