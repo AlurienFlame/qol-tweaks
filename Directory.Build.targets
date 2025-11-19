@@ -1,0 +1,5 @@
+<Project>
+    <PropertyGroup>
+        <GameDirectory>$(ALLUMERIA_GAME_DIR)</GameDirectory>
+    </PropertyGroup>
+</Project>
