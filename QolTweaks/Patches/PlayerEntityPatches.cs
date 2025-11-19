@@ -1,9 +1,7 @@
 using Allumeria;
-using Allumeria.Input;
 using Allumeria.EntitySystem.Entities;
 using Allumeria.ChunkManagement;
 using HarmonyLib;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace QolTweaks.Patches;
 
@@ -11,8 +9,6 @@ namespace QolTweaks.Patches;
 [HarmonyPatch]
 internal static class PlayerEntityPatches
 {
-    public static InputChannel quick_stack_nearby = new InputChannel("quick_stack_nearby", Keys.G);
-
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.Tick))]
     private static class TickPatch
     {
@@ -21,7 +17,7 @@ internal static class PlayerEntityPatches
         {
             if (!World.player.dead && !World.player.inMenu)
             {
-                if (quick_stack_nearby.WasPressedBeforeTick()) {
+                if (QolTweaks.quick_stack_nearby.WasPressedBeforeTick()) {
                     World.player.QuickStackToNearbyChests(Game.worldManager.world);
                 }
             }

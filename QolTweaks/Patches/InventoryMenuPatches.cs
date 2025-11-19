@@ -1,8 +1,6 @@
 using Allumeria;
-using Allumeria.Input;
 using Allumeria.UI.Menus;
 using HarmonyLib;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace QolTweaks.Patches;
 
@@ -10,15 +8,13 @@ namespace QolTweaks.Patches;
 [HarmonyPatch]
 internal static class InventoryMenuPatches
 {
-    public static InputChannel sort = new InputChannel("sort", MouseButton.Button3);
-
     [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.Update))]
     private static class UpdatePatch
     {
         [HarmonyPostfix]
         private static void Postfix()
         {
-            if (sort.WasPressedBeforeTick())
+            if (QolTweaks.sort.WasPressedBeforeTick())
             {
                 if (Game.menu_inventory.show)
                 {
