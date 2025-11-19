@@ -1,14 +1,11 @@
 using Allumeria;
-using Allumeria.Input; // for InputChannel
 using HarmonyLib;
 using Ignitron.Loader;
-using OpenTK.Windowing.GraphicsLibraryFramework; // for MouseButton
 
 namespace QolTweaks;
 
 public sealed class QolTweaks : IModEntrypoint
 {
-    public static InputChannel sort = new InputChannel("sort", MouseButton.Button3);
 
     public void Main(ModBox box)
     {
