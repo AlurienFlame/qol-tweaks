@@ -20,11 +20,13 @@ internal static class InventoryMenuPatches
         {
             if (sort.WasPressedBeforeTick())
             {
-                Logger.Info("Sorting due to mouse wheel press.");
-                Game.menu_inventory.containerController.inventory.Sort();
-                if (Game.menu_inventory.chestPanel.show)
-                {
-                    Game.menu_inventory.chestPanel.inventory.Sort();
+                if (Game.menu_inventory.show) {
+                    Logger.Info("Sorting due to mouse wheel press.");
+                    Game.menu_inventory.containerController.inventory.Sort();
+                    if (Game.menu_inventory.chestPanel.show)
+                    {
+                        Game.menu_inventory.chestPanel.inventory.Sort();
+                    }
                 }
             }
         }

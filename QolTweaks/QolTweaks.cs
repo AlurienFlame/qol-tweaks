@@ -17,5 +17,12 @@ public sealed class QolTweaks : IModEntrypoint
         // initialise harmony
         Harmony harmony = new("io.github.alurienflame.QolTweaks");
         harmony.PatchAll();
+        // TODO: Quick stack to nearby chests on hotkey. probably extend PlayerEntity input
+        /*
+        if (btn_quickStack.WasActivatedPrimary() && World.player != null)
+        {
+            World.player.QuickStackToNearbyChests(Game.worldManager.world);
+        }
+        */
     }
 }
