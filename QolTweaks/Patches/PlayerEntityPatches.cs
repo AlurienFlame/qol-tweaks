@@ -72,6 +72,17 @@ internal static class PlayerEntityPatches
         }
     }
     
+    private static void UseItem(InventorySlot slot, Item item) {
+        item.OnUse(World.player, Game.worldManager.world);
+        if (item.GetTag(ItemTag.can_consume, out var _))
+        {
+            if (!PlayerEntity.allowInfiniteItems)
+            {
+                slot.DecrementItem();
+            }
+        }
+    }
+    
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
@@ -88,14 +99,7 @@ internal static class PlayerEntityPatches
                 if (item.block != null) {
                     PlaceBlock(chunkManager, slot, item.block);
                 } else if (item.CanConsume(World.player)) {
-                    item.OnUse(World.player, Game.worldManager.world);
-                    if (item.GetTag(ItemTag.can_consume, out var _))
-                    {
-                        if (!PlayerEntity.allowInfiniteItems)
-                        {
-                            slot.DecrementItem();
-                        }
-                    }
+                    UseItem(slot, item);
                 }
             }
         }
