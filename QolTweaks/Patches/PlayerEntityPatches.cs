@@ -86,16 +86,13 @@ internal static class PlayerEntityPatches
         if (torchSlots.Count > 0) {
             InventorySlot slot = torchSlots[0];
             Block block = slot.itemStack.GetItem().block;
-            if (block.IsValidLocation(x, y, z, __instance, Game.worldManager.world)) {
-                // FIXME: triggering even if location is out of player reach
-                Logger.Info("Valid Location and sufficient torches");
+            if (__instance.isLookingAtBlock) {
                 PlaceBlock(chunkManager, slot, block);
                 return;
             }
         }
         List<InventorySlot> throwableTorchSlots = GetSlotsWithTag(GamePatches.qoltweaks_throwable_torch, hotbarOnly: true);
         if (throwableTorchSlots.Count > 0) {
-            Logger.Info("Sufficient throwables");
             InventorySlot slot = throwableTorchSlots[0];
             Item item = slot.itemStack.GetItem();
             UseItem(slot, item);
