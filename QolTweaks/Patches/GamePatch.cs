@@ -16,11 +16,13 @@ internal static class GamePatches
     public static InputChannel? place_torch;
     public static InputChannel? quick_heal;
     public static InputChannel? quick_buff;
+    public static InputChannel? recall;
 
     public static ItemTag qoltweaks_torch = new ItemTag("qoltweaks_torch");
     public static ItemTag qoltweaks_throwable_torch = new ItemTag("qoltweaks_throwable_torch");
     public static ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
     public static ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
+    public static ItemTag qoltweaks_recall = new ItemTag("qoltweaks_recall");
 
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]
@@ -34,6 +36,7 @@ internal static class GamePatches
             place_torch = new InputChannel("place_torch", Keys.F);
             quick_heal = new InputChannel("quick_heal", Keys.H);
             quick_buff = new InputChannel("quick_buff", Keys.B);
+            recall = new InputChannel("recall", Keys.Y);
 
             Block.torch.item.AddTag(qoltweaks_torch);
             Block.white_torch.item.AddTag(qoltweaks_torch);
@@ -62,6 +65,8 @@ internal static class GamePatches
             Item.blueberry.AddTag(qoltweaks_buff_potion);
             Item.tomato.AddTag(qoltweaks_buff_potion);
             Item.bread.AddTag(qoltweaks_buff_potion);
+
+            Item.respawn_potion.AddTag(qoltweaks_recall);
         }
     }
 }

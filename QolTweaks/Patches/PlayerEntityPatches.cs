@@ -116,7 +116,7 @@ internal static class PlayerEntityPatches
             if (GamePatches.quick_heal?.WasPressedBeforeTick() == true) {
                 List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_health_potion);
                 if (slots.Count > 0) {
-                    InventorySlot slot = slots[0]; // Get first health potion
+                    InventorySlot slot = slots[0];
                     Item item = slot.itemStack.GetItem();
                     UseItem(slot, item);
                 }
@@ -131,6 +131,16 @@ internal static class PlayerEntityPatches
                         UseItem(slot, item);
                         
                     }
+                }
+            }
+            
+            // Recall
+            if (GamePatches.recall?.WasPressedBeforeTick() == true) {
+                List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_recall);
+                if (slots.Count > 0) {
+                    InventorySlot slot = slots[0];
+                    Item item = slot.itemStack.GetItem();
+                    UseItem(slot, item);
                 }
             }
         }
