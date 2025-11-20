@@ -5,6 +5,7 @@ Download and unzip the zip file from the mod's [Releases](https://github.com/Alu
 ## Features
 - **Sort Hotkey**: Press `Mouse3` while in your inventory to sort it.
 - **Quick stack to nearby chests hotkey**: Press `G` while not in any menus to quick stack to nearby chests.
+- **Quick Torch**: Places or throws a torch directly from your hotbar. Favors items further to the left.
 ## Develop
 Build-and-run on linux: 
 ```
