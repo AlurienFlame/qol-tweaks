@@ -12,16 +12,16 @@ internal static class InventoryMenuPatches
     private static class UpdatePatch
     {
         [HarmonyPostfix]
-        private static void Postfix()
+        private static void Postfix(InventoryMenu __instance)
         {
-            if (GamePatches.sort?.WasPressedBeforeTick() == true)
+            if (GamePatches.sort?.IsDown() == true)
             {
-                if (Game.menu_inventory.show)
+                if (__instance.show)
                 {
-                    Game.menu_inventory.containerController.inventory.Sort();
-                    if (Game.menu_inventory.chestPanel.show)
+                    __instance.containerController.inventory.Sort();
+                    if (__instance.chestPanel.show)
                     {
-                        Game.menu_inventory.chestPanel.inventory.Sort();
+                        __instance.chestPanel.inventory.Sort();
                     }
                 }
             }
