@@ -11,7 +11,7 @@ Download and unzip the zip file from the mod's [Releases](https://github.com/Alu
 - **Quick stack to nearby chests hotkey**: Press `G` while not in any menus to quick stack to nearby chests.
 - **Quick torch hotkey**: Press `F` to place or throw a torch directly from your hotbar. Will prioritize using placeable torches, but resort to using throwables if you're not looking at a block, or if you're out of placeable torches.
 - **Quick heal hotkey**: Press `H` to use a health potion from your hotbar or inventory.
-- **Quick buff hotkey**: Press `B` to use every buff potion in your inventory. Same priority as quick heal. Does not use healing potions or poison potions. Does use food.
+- **Quick buff hotkey**: Press `B` to use every buff potion in your hotbar or inventory. Does not use healing potions or poison potions. Does use food that provides a buff.
 - **Recall hotkey**: Press `Y` to use a potion of returning from your inventory.
 
 All hotkeys can be rebound.
