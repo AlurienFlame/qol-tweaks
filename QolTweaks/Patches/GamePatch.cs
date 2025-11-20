@@ -17,6 +17,10 @@ internal static class GamePatches
     public static InputChannel? quick_heal;
     public static InputChannel? quick_buff;
 
+    public static ItemTag qoltweaks_torch = new ItemTag("qoltweaks_torch");
+    public static ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
+    public static ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
+
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]
     public class Game_OnLoad_Patch
@@ -30,7 +34,6 @@ internal static class GamePatches
             quick_heal = new InputChannel("quick_heal", Keys.H);
             quick_buff = new InputChannel("quick_buff", Keys.B);
 
-            ItemTag qoltweaks_torch = new ItemTag("qoltweaks_torch");
             Item.throwable_torch.AddTag(qoltweaks_torch);
             Item.throwable_glow_bean.AddTag(qoltweaks_torch);
             Block.torch.item.AddTag(qoltweaks_torch);
@@ -38,7 +41,6 @@ internal static class GamePatches
             Block.ice_torch.item.AddTag(qoltweaks_torch);
             Block.ritual_torch.item.AddTag(qoltweaks_torch);
 
-            ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
             Item.health_potion.AddTag(qoltweaks_health_potion);
             Item.weak_health_potion.AddTag(qoltweaks_health_potion);
             Item.steak.AddTag(qoltweaks_health_potion);
@@ -46,7 +48,6 @@ internal static class GamePatches
             Item.gormet_fish_fillet.AddTag(qoltweaks_health_potion);
             Item.red_mushroom.AddTag(qoltweaks_health_potion);
 
-            ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
             Item.speed_potion.AddTag(qoltweaks_buff_potion);
             Item.regen_potion.AddTag(qoltweaks_buff_potion);
             Item.armour_potion.AddTag(qoltweaks_buff_potion);

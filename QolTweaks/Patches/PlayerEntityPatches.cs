@@ -30,8 +30,8 @@ internal static class PlayerEntityPatches
         }
     }
     
-    // Get a list of inventory slots that contain items matching a list of ids
-    private static List<InventorySlot> GetSlots(int[] idsToMatch, bool hotbarOnly = false) {
+    // Get a list of inventory slots that contain items matching a tag
+    private static List<InventorySlot> GetSlotsWithTag(ItemTag tag, bool hotbarOnly = false) {
         List<InventorySlot> result = new List<InventorySlot>();
         InventorySlot[] slots = World.player.inventory.inventory.slots;
         for (int i = 0; i < slots.Length; i++)
@@ -39,7 +39,7 @@ internal static class PlayerEntityPatches
             InventorySlot slot = slots[i];
             if (hotbarOnly && !slot.hotbar) continue;
             if (slot.IsEmpty()) continue;
-            if (idsToMatch.Contains(slot.itemStack.itemID)) {
+            if (slot.itemStack.GetItem().HasTag(tag)) {
                 result.Add(slot);
             }
         }
@@ -78,40 +78,6 @@ internal static class PlayerEntityPatches
         }
     }
 
-    private static int[] torchLikes = {
-        Item.throwable_torch.itemID,
-        Item.throwable_glow_bean.itemID,
-        Block.torch.item.itemID,
-        Block.white_torch.item.itemID,
-        Block.ice_torch.item.itemID,
-        Block.ritual_torch.item.itemID
-    };
-
-    // TODO: Switch to doing this by tags and adding custom tags to these items?
-    private static int[] healthPotions = {
-        Item.health_potion.itemID,
-        Item.weak_health_potion.itemID,
-        Item.steak.itemID,
-        Item.fish_fillet.itemID,
-        Item.gormet_fish_fillet.itemID,
-        Item.red_mushroom.itemID,
-    };
-
-    private static int[] buffPotions = {
-        Item.speed_potion.itemID,
-        Item.regen_potion.itemID,
-        Item.armour_potion.itemID,
-        Item.flight_potion.itemID,
-        Item.mining_potion.itemID,
-        Item.water_walking_potion.itemID,
-        Item.crate_potion.itemID,
-        Item.bagel.itemID,
-        Item.everything_bagel.itemID,
-        Item.blueberry.itemID,
-        Item.tomato.itemID,
-        Item.bread.itemID,
-    };
-
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
@@ -122,7 +88,7 @@ internal static class PlayerEntityPatches
 
             // Place Torch
             if (GamePatches.place_torch?.WasPressedBeforeTick() == true) {
-                List<InventorySlot> slots = GetSlots(torchLikes, hotbarOnly: true);
+                List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_torch, hotbarOnly: true);
                 if (slots.Count == 0) return;
                 InventorySlot slot = slots[0]; // Get first torch
                 Item item = slot.itemStack.GetItem();
@@ -136,7 +102,7 @@ internal static class PlayerEntityPatches
             
             // Quick Heal
             if (GamePatches.quick_heal?.WasPressedBeforeTick() == true) {
-                List<InventorySlot> slots = GetSlots(healthPotions);
+                List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_health_potion);
                 if (slots.Count == 0) return;
                 InventorySlot slot = slots[0]; // Get first health potion
                 Item item = slot.itemStack.GetItem();
@@ -145,7 +111,7 @@ internal static class PlayerEntityPatches
             
             // Quick Buff
             if (GamePatches.quick_buff?.WasPressedBeforeTick() == true) {
-                List<InventorySlot> slots = GetSlots(buffPotions);
+                List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_buff_potion);
                 if (slots.Count == 0) return;
                 foreach (InventorySlot slot in slots) {
                     Item item = slot.itemStack.GetItem();
