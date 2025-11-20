@@ -77,45 +77,63 @@ internal static class PlayerEntityPatches
             }
         }
     }
-
+    
+    private static void TryPlaceOrThrowTorch(PlayerEntity __instance, ChunkManager chunkManager) {
+        int x = __instance.targetedBlockPlacePos.X;
+        int y = __instance.targetedBlockPlacePos.Y;
+        int z = __instance.targetedBlockPlacePos.Z;
+        List<InventorySlot> torchSlots = GetSlotsWithTag(GamePatches.qoltweaks_torch, hotbarOnly: true);
+        if (torchSlots.Count > 0) {
+            InventorySlot slot = torchSlots[0];
+            Block block = slot.itemStack.GetItem().block;
+            if (block.IsValidLocation(x, y, z, __instance, Game.worldManager.world)) {
+                // FIXME: triggering even if location is out of player reach
+                Logger.Info("Valid Location and sufficient torches");
+                PlaceBlock(chunkManager, slot, block);
+                return;
+            }
+        }
+        List<InventorySlot> throwableTorchSlots = GetSlotsWithTag(GamePatches.qoltweaks_throwable_torch, hotbarOnly: true);
+        if (throwableTorchSlots.Count > 0) {
+            Logger.Info("Sufficient throwables");
+            InventorySlot slot = throwableTorchSlots[0];
+            Item item = slot.itemStack.GetItem();
+            UseItem(slot, item);
+        }
+    }
+    
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
         [HarmonyPostfix]
-        private static void Postfix(ChunkManager chunkManager)
+        private static void Postfix(PlayerEntity __instance, ChunkManager chunkManager)
         {
             if (World.player.punchDelay != 0) return;
 
             // Place Torch
             if (GamePatches.place_torch?.WasPressedBeforeTick() == true) {
-                List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_torch, hotbarOnly: true);
-                if (slots.Count == 0) return;
-                InventorySlot slot = slots[0]; // Get first torch
-                Item item = slot.itemStack.GetItem();
-                // Place or throw
-                if (item.block != null) {
-                    PlaceBlock(chunkManager, slot, item.block);
-                } else {
-                    UseItem(slot, item);
-                }
+                TryPlaceOrThrowTorch(__instance, chunkManager);
             }
             
             // Quick Heal
             if (GamePatches.quick_heal?.WasPressedBeforeTick() == true) {
                 List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_health_potion);
-                if (slots.Count == 0) return;
-                InventorySlot slot = slots[0]; // Get first health potion
-                Item item = slot.itemStack.GetItem();
-                UseItem(slot, item);
+                if (slots.Count > 0) {
+                    InventorySlot slot = slots[0]; // Get first health potion
+                    Item item = slot.itemStack.GetItem();
+                    UseItem(slot, item);
+                }
             }
             
             // Quick Buff
             if (GamePatches.quick_buff?.WasPressedBeforeTick() == true) {
                 List<InventorySlot> slots = GetSlotsWithTag(GamePatches.qoltweaks_buff_potion);
-                if (slots.Count == 0) return;
-                foreach (InventorySlot slot in slots) {
-                    Item item = slot.itemStack.GetItem();
-                    UseItem(slot, item);
+                if (slots.Count > 0) {
+                    foreach (InventorySlot slot in slots) {
+                        Item item = slot.itemStack.GetItem();
+                        UseItem(slot, item);
+                        
+                    }
                 }
             }
         }

@@ -4,5 +4,6 @@ keybind.place_torch Place Torch from Hotbar
 keybind.quick_heal Quick Heal
 keybind.quick_buff Quick Buff
 item_tag.qoltweaks_torch Torch
+item_tag.qoltweaks_throwable_torch Throwable Torch
 item_tag.qoltweaks_health_potion Health Potion
 item_tag.qoltweaks_buff_potion Buff Potion

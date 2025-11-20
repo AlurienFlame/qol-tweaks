@@ -18,6 +18,7 @@ internal static class GamePatches
     public static InputChannel? quick_buff;
 
     public static ItemTag qoltweaks_torch = new ItemTag("qoltweaks_torch");
+    public static ItemTag qoltweaks_throwable_torch = new ItemTag("qoltweaks_throwable_torch");
     public static ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
     public static ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
 
@@ -34,12 +35,13 @@ internal static class GamePatches
             quick_heal = new InputChannel("quick_heal", Keys.H);
             quick_buff = new InputChannel("quick_buff", Keys.B);
 
-            Item.throwable_torch.AddTag(qoltweaks_torch);
-            Item.throwable_glow_bean.AddTag(qoltweaks_torch);
             Block.torch.item.AddTag(qoltweaks_torch);
             Block.white_torch.item.AddTag(qoltweaks_torch);
             Block.ice_torch.item.AddTag(qoltweaks_torch);
             Block.ritual_torch.item.AddTag(qoltweaks_torch);
+
+            Item.throwable_torch.AddTag(qoltweaks_throwable_torch);
+            Item.throwable_glow_bean.AddTag(qoltweaks_throwable_torch);
 
             Item.health_potion.AddTag(qoltweaks_health_potion);
             Item.weak_health_potion.AddTag(qoltweaks_health_potion);
