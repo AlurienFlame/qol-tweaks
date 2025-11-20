@@ -4,6 +4,7 @@ using Allumeria.ChunkManagement;
 using Allumeria.Audio;
 using Allumeria.Blocks.Blocks;
 using Allumeria.Items;
+using Allumeria.Items.ItemTagTypes;
 using HarmonyLib;
 using System.Linq;
 
@@ -28,7 +29,7 @@ internal static class PlayerEntityPatches
         }
     }
     
-    private static int GetTorchIndex() {
+    private static InventorySlot GetTorchSlot() {
         int[] torchLikes = {
             Item.throwable_torch.itemID,
             Item.throwable_glow_bean.itemID,
@@ -40,14 +41,35 @@ internal static class PlayerEntityPatches
         // Find the first torch-like item in the hotbar
         for (int i = 0; i < World.player.inventory.inventory.slots.Length; i++)
         {
-            if (World.player.inventory.inventory.slots[i].IsEmpty()) {
+            InventorySlot slot = World.player.inventory.inventory.slots[i];
+            if (slot.IsEmpty()) {
                 continue;
             }
-            if (torchLikes.Contains(World.player.inventory.inventory.slots[i].itemStack.itemID)) {
-                return i;
+            if (torchLikes.Contains(slot.itemStack.itemID)) {
+                return slot;
             }
         }
-        return -1;
+        return null;
+    }
+    
+    private static void PlaceBlock(ChunkManager chunkManager, InventorySlot slot, Block block) {
+        int x = World.player.targetedBlockPlacePos.X;
+        int y = World.player.targetedBlockPlacePos.Y;
+        int z = World.player.targetedBlockPlacePos.Z;
+        if (block.IsValidLocation(x, y, z, World.player, Game.worldManager.world))
+        {
+            AudioPlayer.PlaySoundWorldRandom(block.blockMaterial.placeSound, World.player.targetedBlockPlacePos);
+            chunkManager.SetBlockWithUpdateAndLight(x, y, z, block, block.GetPlaceMetadata(World.player, x, y, z, Game.worldManager.world), maintainFluid: true);
+            chunkManager.MarkNeighboursDirty(x, y, z);
+            chunkManager.GetBlock(x, y, z).OnPlace(World.player, x, y, z, Game.worldManager.world);
+            chunkManager.RequestChunkFromCoords(x, y, z).preserveForUpgrade = true;
+            World.player.punchDelay = World.player.defaultBuildDelay;
+            World.player.currentChunk.preserveForUpgrade = true;
+            if (!PlayerEntity.allowInfiniteItems)
+            {
+                slot.DecrementItem();
+            }
+        }
     }
     
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
@@ -57,35 +79,22 @@ internal static class PlayerEntityPatches
         private static void Postfix(ChunkManager chunkManager)
         {
             if (GamePatches.place_torch.WasPressedBeforeTick() && World.player.punchDelay == 0) {
-                int torchIdx = GetTorchIndex();
-                if (torchIdx == -1) {
+                InventorySlot slot = GetTorchSlot();
+                if (slot == null) {
                     return;
                 }
-                // Get inventory slot at that index
-                InventorySlot inventorySlot = World.player.inventory.inventory.slots[torchIdx];
                 // Figure out if we're dealing with a placable or a throwable
-                // TODO
-                Block torchBlock = inventorySlot.itemStack.GetItem().block;
-
-                // Throw it
-                // TODO
-                // Place it
-                Logger.Info("Placing torch.");
-                int x = World.player.targetedBlockPlacePos.X;
-                int y = World.player.targetedBlockPlacePos.Y;
-                int z = World.player.targetedBlockPlacePos.Z;
-                if (torchBlock.IsValidLocation(x, y, z, World.player, Game.worldManager.world))
-                {
-                    AudioPlayer.PlaySoundWorldRandom(torchBlock.blockMaterial.placeSound, World.player.targetedBlockPlacePos);
-                    chunkManager.SetBlockWithUpdateAndLight(x, y, z, torchBlock, torchBlock.GetPlaceMetadata(World.player, x, y, z, Game.worldManager.world), maintainFluid: true);
-                    chunkManager.MarkNeighboursDirty(x, y, z);
-                    chunkManager.GetBlock(x, y, z).OnPlace(World.player, x, y, z, Game.worldManager.world);
-                    chunkManager.RequestChunkFromCoords(x, y, z).preserveForUpgrade = true;
-                    World.player.punchDelay = World.player.defaultBuildDelay;
-                    World.player.currentChunk.preserveForUpgrade = true;
-                    if (!PlayerEntity.allowInfiniteItems)
+                Item item = slot.itemStack.GetItem();
+                if (item.block != null) {
+                    PlaceBlock(chunkManager, slot, item.block);
+                } else if (item.CanConsume(World.player)) {
+                    item.OnUse(World.player, Game.worldManager.world);
+                    if (item.GetTag(ItemTag.can_consume, out var _))
                     {
-                        inventorySlot.DecrementItem();
+                        if (!PlayerEntity.allowInfiniteItems)
+                        {
+                            slot.DecrementItem();
+                        }
                     }
                 }
             }
