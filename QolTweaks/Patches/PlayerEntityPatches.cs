@@ -42,7 +42,7 @@ internal static class PlayerEntityPatches
         for (int i = 0; i < World.player.inventory.inventory.slots.Length; i++)
         {
             InventorySlot slot = World.player.inventory.inventory.slots[i];
-            if (slot.IsEmpty()) {
+            if (!slot.hotbar || slot.IsEmpty()) {
                 continue;
             }
             if (torchLikes.Contains(slot.itemStack.itemID)) {
