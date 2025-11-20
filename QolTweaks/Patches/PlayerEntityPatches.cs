@@ -49,7 +49,7 @@ internal static class PlayerEntityPatches
                 return slot;
             }
         }
-        return null;
+        return new InventorySlot();
     }
     
     private static void PlaceBlock(ChunkManager chunkManager, InventorySlot slot, Block block) {
@@ -91,7 +91,7 @@ internal static class PlayerEntityPatches
         {
             if (GamePatches.place_torch?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
                 InventorySlot slot = GetTorchSlot();
-                if (slot == null) {
+                if (slot.IsEmpty()) {
                     return;
                 }
                 // Figure out if we're dealing with a placable or a throwable
