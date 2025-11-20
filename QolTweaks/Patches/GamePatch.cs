@@ -2,6 +2,9 @@ using Allumeria;
 using Allumeria.Input;
 using HarmonyLib;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Allumeria.Items;
+using Allumeria.Items.ItemTagTypes;
+using Allumeria.Blocks.Blocks;
 
 namespace QolTweaks.Patches;
 
@@ -26,6 +29,36 @@ internal static class GamePatches
             place_torch = new InputChannel("place_torch", Keys.F);
             quick_heal = new InputChannel("quick_heal", Keys.H);
             quick_buff = new InputChannel("quick_buff", Keys.B);
+
+            ItemTag qoltweaks_torch = new ItemTag("qoltweaks_torch");
+            Item.throwable_torch.AddTag(qoltweaks_torch);
+            Item.throwable_glow_bean.AddTag(qoltweaks_torch);
+            Block.torch.item.AddTag(qoltweaks_torch);
+            Block.white_torch.item.AddTag(qoltweaks_torch);
+            Block.ice_torch.item.AddTag(qoltweaks_torch);
+            Block.ritual_torch.item.AddTag(qoltweaks_torch);
+
+            ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
+            Item.health_potion.AddTag(qoltweaks_health_potion);
+            Item.weak_health_potion.AddTag(qoltweaks_health_potion);
+            Item.steak.AddTag(qoltweaks_health_potion);
+            Item.fish_fillet.AddTag(qoltweaks_health_potion);
+            Item.gormet_fish_fillet.AddTag(qoltweaks_health_potion);
+            Item.red_mushroom.AddTag(qoltweaks_health_potion);
+
+            ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
+            Item.speed_potion.AddTag(qoltweaks_buff_potion);
+            Item.regen_potion.AddTag(qoltweaks_buff_potion);
+            Item.armour_potion.AddTag(qoltweaks_buff_potion);
+            Item.flight_potion.AddTag(qoltweaks_buff_potion);
+            Item.mining_potion.AddTag(qoltweaks_buff_potion);
+            Item.water_walking_potion.AddTag(qoltweaks_buff_potion);
+            Item.crate_potion.AddTag(qoltweaks_buff_potion);
+            Item.bagel.AddTag(qoltweaks_buff_potion);
+            Item.everything_bagel.AddTag(qoltweaks_buff_potion);
+            Item.blueberry.AddTag(qoltweaks_buff_potion);
+            Item.tomato.AddTag(qoltweaks_buff_potion);
+            Item.bread.AddTag(qoltweaks_buff_potion);
         }
     }
 }

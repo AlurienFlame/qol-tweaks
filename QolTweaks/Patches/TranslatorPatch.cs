@@ -2,6 +2,7 @@ using Allumeria;
 using Allumeria.DataManagement.Translation;
 using Allumeria.Settings;
 using Allumeria.Input;
+using Allumeria.Items.ItemTagTypes;
 using HarmonyLib;
 
 namespace QolTweaks.Patches;
@@ -32,6 +33,7 @@ internal static class TranslatorPatches
                 }
                 Logger.Info($"Translation dictionary loaded for {text} with {Translator.translationKey.Count} values.");
             }
+            ItemTag.Translate();
             InputManager.Translate();
         }
     }
