@@ -5,6 +5,7 @@ using Allumeria.Audio;
 using Allumeria.Blocks.Blocks;
 using Allumeria.Items;
 using HarmonyLib;
+using System.Linq;
 
 namespace QolTweaks.Patches;
 
@@ -27,6 +28,28 @@ internal static class PlayerEntityPatches
         }
     }
     
+    private static int GetTorchIndex() {
+        int[] torchLikes = {
+            Item.throwable_torch.itemID,
+            Item.throwable_glow_bean.itemID,
+            Block.torch.item.itemID,
+            Block.white_torch.item.itemID,
+            Block.ice_torch.item.itemID,
+            Block.ritual_torch.item.itemID
+        };
+        // Find the first torch-like item in the hotbar
+        for (int i = 0; i < World.player.inventory.inventory.slots.Length; i++)
+        {
+            if (World.player.inventory.inventory.slots[i].IsEmpty()) {
+                continue;
+            }
+            if (torchLikes.Contains(World.player.inventory.inventory.slots[i].itemStack.itemID)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
@@ -34,14 +57,19 @@ internal static class PlayerEntityPatches
         private static void Postfix(ChunkManager chunkManager)
         {
             if (GamePatches.place_torch.WasPressedBeforeTick() && World.player.punchDelay == 0) {
-                // Search hotbar for torch, sticky torch, and other variants
-                InventorySlot inventorySlot = World.player.inventory.inventory.slots[0];
-                if (inventorySlot.IsEmpty()) {
+                int torchIdx = GetTorchIndex();
+                if (torchIdx == -1) {
                     return;
                 }
+                // Get inventory slot at that index
+                InventorySlot inventorySlot = World.player.inventory.inventory.slots[torchIdx];
+                // Figure out if we're dealing with a placable or a throwable
+                // TODO
                 Block torchBlock = inventorySlot.itemStack.GetItem().block;
 
-                // Place or throw the item in the accquired inventory slot
+                // Throw it
+                // TODO
+                // Place it
                 Logger.Info("Placing torch.");
                 int x = World.player.targetedBlockPlacePos.X;
                 int y = World.player.targetedBlockPlacePos.Y;
