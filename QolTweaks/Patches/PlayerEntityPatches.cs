@@ -23,4 +23,16 @@ internal static class PlayerEntityPatches
             }
         }
     }
+    
+    [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
+    private static class PlaceAndDestroyPatch
+    {
+        [HarmonyPostfix]
+        private static void Postfix()
+        {
+            if (GamePatches.place_torch.WasPressedBeforeTick() && World.player.punchDelay == 0) {
+                Logger.Info("Placing torch.");
+            }
+        }
+    }
 }

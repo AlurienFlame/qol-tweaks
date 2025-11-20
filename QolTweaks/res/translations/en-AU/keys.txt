@@ -1,2 +1,3 @@
 keybind.quick_stack_nearby Quick Stack to Nearby Chests
 keybind.sort Sort Inventory
+keybind.place_torch Place Torch from Hotbar
