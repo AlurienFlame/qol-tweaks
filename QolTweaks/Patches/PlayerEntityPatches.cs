@@ -97,14 +97,31 @@ internal static class PlayerEntityPatches
         Item.red_mushroom.itemID,
     };
 
+    private static int[] buffPotions = {
+        Item.speed_potion.itemID,
+        Item.regen_potion.itemID,
+        Item.armour_potion.itemID,
+        Item.flight_potion.itemID,
+        Item.mining_potion.itemID,
+        Item.water_walking_potion.itemID,
+        Item.crate_potion.itemID,
+        Item.bagel.itemID,
+        Item.everything_bagel.itemID,
+        Item.blueberry.itemID,
+        Item.tomato.itemID,
+        Item.bread.itemID,
+    };
+
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
         [HarmonyPostfix]
         private static void Postfix(ChunkManager chunkManager)
         {
+            if (World.player.punchDelay != 0) return;
+
             // Place Torch
-            if (GamePatches.place_torch?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
+            if (GamePatches.place_torch?.WasPressedBeforeTick() == true) {
                 List<InventorySlot> slots = GetSlots(torchLikes, hotbarOnly: true);
                 if (slots.Count == 0) return;
                 InventorySlot slot = slots[0]; // Get first torch
@@ -118,12 +135,22 @@ internal static class PlayerEntityPatches
             }
             
             // Quick Heal
-            if (GamePatches.quick_heal?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
+            if (GamePatches.quick_heal?.WasPressedBeforeTick() == true) {
                 List<InventorySlot> slots = GetSlots(healthPotions);
                 if (slots.Count == 0) return;
                 InventorySlot slot = slots[0]; // Get first health potion
                 Item item = slot.itemStack.GetItem();
                 UseItem(slot, item);
+            }
+            
+            // Quick Buff
+            if (GamePatches.quick_buff?.WasPressedBeforeTick() == true) {
+                List<InventorySlot> slots = GetSlots(buffPotions);
+                if (slots.Count == 0) return;
+                foreach (InventorySlot slot in slots) {
+                    Item item = slot.itemStack.GetItem();
+                    UseItem(slot, item);
+                }
             }
         }
     }
