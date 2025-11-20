@@ -22,7 +22,7 @@ internal static class PlayerEntityPatches
         {
             if (!World.player.dead && !World.player.inMenu)
             {
-                if (GamePatches.quick_stack_nearby.WasPressedBeforeTick()) {
+                if (GamePatches.quick_stack_nearby?.WasPressedBeforeTick() == true) {
                     World.player.QuickStackToNearbyChests(Game.worldManager.world);
                 }
             }
@@ -89,7 +89,7 @@ internal static class PlayerEntityPatches
         [HarmonyPostfix]
         private static void Postfix(ChunkManager chunkManager)
         {
-            if (GamePatches.place_torch.WasPressedBeforeTick() && World.player.punchDelay == 0) {
+            if (GamePatches.place_torch?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
                 InventorySlot slot = GetTorchSlot();
                 if (slot == null) {
                     return;

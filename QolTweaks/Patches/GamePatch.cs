@@ -8,9 +8,9 @@ namespace QolTweaks.Patches;
 [HarmonyPatch]
 internal static class GamePatches
 {
-    public static InputChannel quick_stack_nearby;
-    public static InputChannel sort;
-    public static InputChannel place_torch;
+    public static InputChannel? quick_stack_nearby;
+    public static InputChannel? sort;
+    public static InputChannel? place_torch;
 
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]
