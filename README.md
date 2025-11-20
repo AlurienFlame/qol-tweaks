@@ -28,3 +28,10 @@ Package for distribution:
 dotnet build -c Release
 ```
 Note that the resources folder won't properly copy over on Windows. If you want to contribute to the project on windows, either get into the habit of manually copying `res`, or update the build settings in `QolTweaks.csproj` to work differently depending on operating system.
+
+### Decompiling the Game
+The way I have my solution set up right now, it'll look for a folder called `GameDecompiled` containing the Allumeria source code. Either delete that line of `QolTweaks.slnx`, or give it what it's looking for. Here's one approach:
+```bash
+dotnet tool install -g ilspycmd
+ilspycmd -p --nested-directories -o GameDecompiled "$ALLUMERIA_GAME_DIR/Allumeria.dll"
+```

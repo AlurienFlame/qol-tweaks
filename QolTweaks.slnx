@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="QolTweaks\QolTweaks.csproj" />
   <Project Path="ignitron\Ignitron.Loader\Ignitron.Loader.csproj" />
+  <Project Path="GameDecompiled\Allumeria.csproj" />
 </Solution>
