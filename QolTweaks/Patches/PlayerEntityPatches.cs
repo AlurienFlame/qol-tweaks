@@ -31,7 +31,7 @@ internal static class PlayerEntityPatches
     }
     
     // Get a list of inventory slots that contain items matching a list of ids
-    private static List<InventorySlot> GetSlots(int[] idsToMatch, bool hotbarOnly) {
+    private static List<InventorySlot> GetSlots(int[] idsToMatch, bool hotbarOnly = false) {
         List<InventorySlot> result = new List<InventorySlot>();
         InventorySlot[] slots = World.player.inventory.inventory.slots;
         for (int i = 0; i < slots.Length; i++)
@@ -67,6 +67,7 @@ internal static class PlayerEntityPatches
     }
     
     private static void UseItem(InventorySlot slot, Item item) {
+        if (!item.CanConsume(World.player)) return;
         item.OnUse(World.player, Game.worldManager.world);
         if (item.GetTag(ItemTag.can_consume, out var _))
         {
@@ -86,6 +87,16 @@ internal static class PlayerEntityPatches
         Block.ritual_torch.item.itemID
     };
 
+    // TODO: Switch to doing this by tags and adding custom tags to these items?
+    private static int[] healthPotions = {
+        Item.health_potion.itemID,
+        Item.weak_health_potion.itemID,
+        Item.steak.itemID,
+        Item.fish_fillet.itemID,
+        Item.gormet_fish_fillet.itemID,
+        Item.red_mushroom.itemID,
+    };
+
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
@@ -101,9 +112,18 @@ internal static class PlayerEntityPatches
                 // Place or throw
                 if (item.block != null) {
                     PlaceBlock(chunkManager, slot, item.block);
-                } else if (item.CanConsume(World.player)) {
+                } else {
                     UseItem(slot, item);
                 }
+            }
+            
+            // Quick Heal
+            if (GamePatches.quick_heal?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
+                List<InventorySlot> slots = GetSlots(healthPotions);
+                if (slots.Count == 0) return;
+                InventorySlot slot = slots[0]; // Get first health potion
+                Item item = slot.itemStack.GetItem();
+                UseItem(slot, item);
             }
         }
     }
