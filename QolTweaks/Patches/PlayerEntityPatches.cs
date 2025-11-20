@@ -7,6 +7,7 @@ using Allumeria.Items;
 using Allumeria.Items.ItemTagTypes;
 using HarmonyLib;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace QolTweaks.Patches;
 
@@ -29,27 +30,20 @@ internal static class PlayerEntityPatches
         }
     }
     
-    private static InventorySlot GetTorchSlot() {
-        int[] torchLikes = {
-            Item.throwable_torch.itemID,
-            Item.throwable_glow_bean.itemID,
-            Block.torch.item.itemID,
-            Block.white_torch.item.itemID,
-            Block.ice_torch.item.itemID,
-            Block.ritual_torch.item.itemID
-        };
-        // Find the first torch-like item in the hotbar
-        for (int i = 0; i < World.player.inventory.inventory.slots.Length; i++)
+    // Get a list of inventory slots that contain items matching a list of ids
+    private static List<InventorySlot> GetSlots(int[] idsToMatch, bool hotbarOnly) {
+        List<InventorySlot> result = new List<InventorySlot>();
+        InventorySlot[] slots = World.player.inventory.inventory.slots;
+        for (int i = 0; i < slots.Length; i++)
         {
-            InventorySlot slot = World.player.inventory.inventory.slots[i];
-            if (!slot.hotbar || slot.IsEmpty()) {
-                continue;
-            }
-            if (torchLikes.Contains(slot.itemStack.itemID)) {
-                return slot;
+            InventorySlot slot = slots[i];
+            if (hotbarOnly && !slot.hotbar) continue;
+            if (slot.IsEmpty()) continue;
+            if (idsToMatch.Contains(slot.itemStack.itemID)) {
+                result.Add(slot);
             }
         }
-        return new InventorySlot();
+        return result;
     }
     
     private static void PlaceBlock(ChunkManager chunkManager, InventorySlot slot, Block block) {
@@ -82,20 +76,29 @@ internal static class PlayerEntityPatches
             }
         }
     }
-    
+
+    private static int[] torchLikes = {
+        Item.throwable_torch.itemID,
+        Item.throwable_glow_bean.itemID,
+        Block.torch.item.itemID,
+        Block.white_torch.item.itemID,
+        Block.ice_torch.item.itemID,
+        Block.ritual_torch.item.itemID
+    };
+
     [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.PlaceAndDestroy))]
     private static class PlaceAndDestroyPatch
     {
         [HarmonyPostfix]
         private static void Postfix(ChunkManager chunkManager)
         {
+            // Place Torch
             if (GamePatches.place_torch?.WasPressedBeforeTick() == true && World.player.punchDelay == 0) {
-                InventorySlot slot = GetTorchSlot();
-                if (slot.IsEmpty()) {
-                    return;
-                }
-                // Figure out if we're dealing with a placable or a throwable
+                List<InventorySlot> slots = GetSlots(torchLikes, hotbarOnly: true);
+                if (slots.Count == 0) return;
+                InventorySlot slot = slots[0]; // Get first torch
                 Item item = slot.itemStack.GetItem();
+                // Place or throw
                 if (item.block != null) {
                     PlaceBlock(chunkManager, slot, item.block);
                 } else if (item.CanConsume(World.player)) {

@@ -11,6 +11,8 @@ internal static class GamePatches
     public static InputChannel? quick_stack_nearby;
     public static InputChannel? sort;
     public static InputChannel? place_torch;
+    public static InputChannel? quick_heal;
+    public static InputChannel? quick_buff;
 
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]
@@ -22,6 +24,8 @@ internal static class GamePatches
             quick_stack_nearby = new InputChannel("quick_stack_nearby", Keys.G);
             sort = new InputChannel("sort", MouseButton.Button3);
             place_torch = new InputChannel("place_torch", Keys.F);
+            quick_heal = new InputChannel("quick_heal", Keys.H);
+            quick_buff = new InputChannel("quick_buff", Keys.B);
         }
     }
 }
