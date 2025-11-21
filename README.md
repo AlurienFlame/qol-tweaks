@@ -5,7 +5,8 @@ Depends on Allumeria and Ignitron.
 
 Download and unzip the zip file from the mod's [Releases](https://github.com/AlurienFlame/qol-tweaks/releases), and place the resulting folder in the `mods` folder of your Allumeria install.
 ## Features
-- **Craft All**: Press `Shift+LMB` to craft as many as possible of a recipe.
+- **Craft all**: Press `Shift+LMB` to craft as many as possible of a recipe.
+- **Show block names**: When looking at a block or entity, its name will be displayed at the top of the screen. This can be disabled in the settings.
 ### Hotkeys
 - **Sort hotkey**: Press `Mouse3` while in your inventory to sort it.
 - **Quick stack to nearby chests hotkey**: Press `G` while not in any menus to quick stack to nearby chests.
