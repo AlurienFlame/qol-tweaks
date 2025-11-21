@@ -18,6 +18,8 @@ internal static class TranslatorPatches
         {
             string text = "en-AU";
             text = (string)GameSettings.current_language.GetValue();
+            // FIXME: Requires mod folder to be exactly "QolTweaks," doesn't play nice with zip files
+            // Also I suspect there's some kind of sneaky race condition going on since sometimes the game freezes at loading translations
             string path = Directory.GetCurrentDirectory() + "/mods/QolTweaks/res/translations/" + text + "/keys.txt";
             if (File.Exists(path))
             {
