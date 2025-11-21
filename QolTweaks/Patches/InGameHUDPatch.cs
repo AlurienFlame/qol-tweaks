@@ -2,18 +2,21 @@ using Allumeria;
 using Allumeria.ChunkManagement;
 using Allumeria.EntitySystem;
 using Allumeria.Items;
-using Allumeria.Rendering;
 using Allumeria.UI;
 using Allumeria.UI.Menus;
 using Allumeria.UI.Text;
 using HarmonyLib;
-using OpenTK.Mathematics;
 using QolTweaks.Patches;
 
 [HarmonyPatch]
 internal static class InGameHUDPatch
 {
-    public static List<ItemStack> recentlyPickedUpItems = new List<ItemStack>();
+    public struct PickupNotifierEntry
+    {
+        public ItemStack itemStack;
+        public double displayTime;
+    }
+    public static List<PickupNotifierEntry> recentlyPickedUpItems = new List<PickupNotifierEntry>();
 
     [HarmonyPatch(typeof(InGameHUD), nameof(InGameHUD.Render))]
     public class InGameHUD_Render_Patch
@@ -31,17 +34,29 @@ internal static class InGameHUDPatch
 
         private static void RenderPickupNotifier()
         {
-            foreach (ItemStack stack in recentlyPickedUpItems)
+            for (int i = 0; i < recentlyPickedUpItems.Count; i++)
             {
-                string text = stack.GetItem().translatedName + " x" + stack.amount;
+                var stack = recentlyPickedUpItems[i];
+                
+                if (stack.displayTime <= 0)
+                {
+                    recentlyPickedUpItems.RemoveAt(i);
+                    i--;
+                    continue;
+                }
+
+                string text = $"{stack.itemStack.GetItem().translatedName} x{stack.itemStack.amount}";
 
                 TextRenderer.DrawTextShadow(
                     text,
-                    UIManager.scaledWidth - TextRenderer.GetTextWidth(text) - 30,
-                    UIManager.scaledHeight - 30,
+                    UIManager.scaledWidth - TextRenderer.GetTextWidth(text) - 10,
+                    UIManager.scaledHeight - (recentlyPickedUpItems.Count * 20 + 10) + (i * 20),
                     UIManager.scale,
                     applyScaleToPos: true
                 );
+
+                stack.displayTime -= Game.deltaTime;
+                recentlyPickedUpItems[i] = stack;
             }
         }
 

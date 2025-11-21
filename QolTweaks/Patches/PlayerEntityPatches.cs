@@ -154,7 +154,11 @@ internal static class PlayerEntityPatches
             [HarmonyPostfix]
             private static void Postfix(PlayerEntity __instance, ItemStack stack)
             {
-                InGameHUDPatch.recentlyPickedUpItems.Add(stack);
+                InGameHUDPatch.recentlyPickedUpItems.Add(new InGameHUDPatch.PickupNotifierEntry
+                {
+                    itemStack = stack,
+                    displayTime = 2 // seconds
+                });
             }
         }
     }
