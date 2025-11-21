@@ -8,6 +8,9 @@ using Allumeria.Items.ItemTagTypes;
 using HarmonyLib;
 using System.Linq;
 using System.Collections.Generic;
+using Allumeria.UI;
+using Allumeria.UI.Text;
+using Allumeria.Rendering;
 
 namespace QolTweaks.Patches;
 
@@ -142,6 +145,16 @@ internal static class PlayerEntityPatches
                     Item item = slot.itemStack.GetItem();
                     UseItem(slot, item);
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerEntity), nameof(PlayerEntity.GiveItem))]
+        private static class GiveItemPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(PlayerEntity __instance, ItemStack stack)
+            {
+                InGameHUDPatch.recentlyPickedUpItems.Add(stack);
             }
         }
     }
