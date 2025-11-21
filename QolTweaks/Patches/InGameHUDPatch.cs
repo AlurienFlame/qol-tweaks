@@ -24,7 +24,11 @@ internal static class InGameHUDPatch
         [HarmonyPostfix]
         public static void Postfix()
         {
-            RenderPickupNotifier();
+            if (GamePatches.enable_pickup_notifier.value)
+            {
+                RenderPickupNotifier();
+            }
+            CountdownPickupNotifier();
 
             if (GamePatches.enable_waila.value && World.player != null && !World.player.inMenu && Game.worldManager.world.bossEntity == null)
             {
@@ -37,15 +41,8 @@ internal static class InGameHUDPatch
             for (int i = 0; i < recentlyPickedUpItems.Count; i++)
             {
                 var stack = recentlyPickedUpItems[i];
-                
-                if (stack.displayTime <= 0)
-                {
-                    recentlyPickedUpItems.RemoveAt(i);
-                    i--;
-                    continue;
-                }
 
-                string text = $"{stack.itemStack.GetItem().translatedName} x{stack.itemStack.amount}";
+                string text = $"{stack.itemStack.GetItem().translatedName} x{stack.itemStack.amount}"; // FIXME: amount is always 0
 
                 TextRenderer.DrawTextShadow(
                     text,
@@ -54,7 +51,20 @@ internal static class InGameHUDPatch
                     UIManager.scale,
                     applyScaleToPos: true
                 );
+            }
+        }
 
+        private static void CountdownPickupNotifier()
+        {
+            for (int i = 0; i < recentlyPickedUpItems.Count; i++)
+            {
+                var stack = recentlyPickedUpItems[i];
+                if (stack.displayTime <= 0)
+                {
+                    recentlyPickedUpItems.RemoveAt(i);
+                    i--;
+                    continue;
+                }
                 stack.displayTime -= Game.deltaTime;
                 recentlyPickedUpItems[i] = stack;
             }

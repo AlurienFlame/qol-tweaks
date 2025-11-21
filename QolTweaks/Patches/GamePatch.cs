@@ -26,6 +26,7 @@ internal static class GamePatches
     public static ItemTag qoltweaks_recall = new ItemTag("qoltweaks_recall");
 
     public static SettingsEntryBool enable_waila = new SettingsEntryBool("enable_waila", SettingsCategory.misc, defaultValue: true);
+    public static SettingsEntryBool enable_pickup_notifier = new SettingsEntryBool("enable_pickup_notifier", SettingsCategory.misc, defaultValue: true);
 
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]

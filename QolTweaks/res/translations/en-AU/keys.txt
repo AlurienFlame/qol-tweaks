@@ -10,3 +10,4 @@ item_tag.qoltweaks_health_potion Health Potion
 item_tag.qoltweaks_buff_potion Buff Potion
 item_tag.qoltweaks_recall Recall Item
 settings.enable_waila Show Block Names
+settings.enable_pickup_notifier Show Recently Picked Up Items
