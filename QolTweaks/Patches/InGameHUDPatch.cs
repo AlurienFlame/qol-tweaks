@@ -11,9 +11,9 @@ using QolTweaks.Patches;
 [HarmonyPatch]
 internal static class InGameHUDPatch
 {
-    public struct PickupNotifierEntry
+    public class PickupNotifierEntry
     {
-        public string name;
+        public required string name;
         public int amount;
         public double displayTime;
     }
@@ -43,7 +43,7 @@ internal static class InGameHUDPatch
             {
                 PickupNotifierEntry stack = recentlyPickedUpItems[i];
 
-                string text = $"{stack.name} x{stack.amount}"; // FIXME: amount is always 0
+                string text = $"{stack.name} x{stack.amount}";
 
                 TextRenderer.DrawTextShadow(
                     text,
@@ -67,7 +67,6 @@ internal static class InGameHUDPatch
                     continue;
                 }
                 stack.displayTime -= Game.deltaTime;
-                recentlyPickedUpItems[i] = stack;
             }
         }
 

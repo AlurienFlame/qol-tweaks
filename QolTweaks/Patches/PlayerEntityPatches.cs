@@ -154,13 +154,22 @@ internal static class PlayerEntityPatches
             [HarmonyPostfix]
             private static void Prefix(ItemStack stack)
             {
-                Logger.Info($"Picked up item: {stack.GetItem().translatedName} x{stack.amount}");
-                InGameHUDPatch.recentlyPickedUpItems.Add(new InGameHUDPatch.PickupNotifierEntry
+                string name = stack.GetItem().translatedName;
+                InGameHUDPatch.PickupNotifierEntry? existing = InGameHUDPatch.recentlyPickedUpItems.FirstOrDefault(e => e.name == name);
+                if (existing != null)
                 {
-                    name = stack.GetItem().translatedName,
-                    amount = stack.amount,
-                    displayTime = 2 // seconds
-                });
+                    existing.amount += stack.amount;
+                    existing.displayTime = 2; // seconds
+                }
+                else
+                {
+                    InGameHUDPatch.recentlyPickedUpItems.Add(new InGameHUDPatch.PickupNotifierEntry
+                    {
+                        name = stack.GetItem().translatedName,
+                        amount = stack.amount,
+                        displayTime = 2 // seconds
+                    });
+                }
             }
         }
     }
