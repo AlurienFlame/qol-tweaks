@@ -5,6 +5,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using Allumeria.Items;
 using Allumeria.Items.ItemTagTypes;
 using Allumeria.Blocks.Blocks;
+using Allumeria.Settings;
 
 namespace QolTweaks.Patches;
 
@@ -23,6 +24,8 @@ internal static class GamePatches
     public static ItemTag qoltweaks_health_potion = new ItemTag("qoltweaks_health_potion");
     public static ItemTag qoltweaks_buff_potion = new ItemTag("qoltweaks_buff_potion");
     public static ItemTag qoltweaks_recall = new ItemTag("qoltweaks_recall");
+
+    public static SettingsEntryBool enable_waila = new SettingsEntryBool("enable_waila", SettingsCategory.misc, defaultValue: true);
 
     [HarmonyPatch(typeof(Game))]
     [HarmonyPatch("OnLoad")]

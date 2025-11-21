@@ -4,6 +4,7 @@ using Allumeria.UI;
 using Allumeria.UI.Menus;
 using Allumeria.UI.Text;
 using HarmonyLib;
+using QolTweaks.Patches;
 
 [HarmonyPatch]
 internal static class InGameHUDPatch
@@ -14,7 +15,7 @@ internal static class InGameHUDPatch
         [HarmonyPostfix]
         public static void Postfix()
         {
-            if (World.player != null && !World.player.inMenu && World.player.isLookingAtBlock && World.lookingAtBlock != null && Game.worldManager.world.bossEntity == null)
+            if (GamePatches.enable_waila.value && World.player != null && !World.player.inMenu && World.player.isLookingAtBlock && World.lookingAtBlock != null && Game.worldManager.world.bossEntity == null)
             {
                 string text = World.lookingAtBlock.item.translatedName;
                 TextRenderer.DrawTextShadow(

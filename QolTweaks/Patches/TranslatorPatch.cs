@@ -10,8 +10,7 @@ namespace QolTweaks.Patches;
 [HarmonyPatch]
 internal static class TranslatorPatches
 {
-    [HarmonyPatch(typeof(Translator))]
-    [HarmonyPatch("LoadTranslation")]
+    [HarmonyPatch(typeof(Translator), nameof(Translator.LoadTranslation))]
     public class Translator_LoadTranslation_Patch
     {
         [HarmonyPostfix]
@@ -33,8 +32,14 @@ internal static class TranslatorPatches
                 }
                 Logger.Info($"Translation dictionary loaded for {text} with {Translator.translationKey.Count} values.");
             }
+            // Item.TranslateNames();
             ItemTag.Translate();
+            GameSettings.TranslateAll();
+            // ControllerHintEntry.TranslateAll();
             InputManager.Translate();
+            // Effect.TranslateAll();
+            // CraftingStation.TranslateAll();
+            // InGameHUD.TranslateTips();
         }
     }
 }
