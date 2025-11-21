@@ -152,11 +152,13 @@ internal static class PlayerEntityPatches
         private static class GiveItemPatch
         {
             [HarmonyPostfix]
-            private static void Postfix(PlayerEntity __instance, ItemStack stack)
+            private static void Prefix(ItemStack stack)
             {
+                Logger.Info($"Picked up item: {stack.GetItem().translatedName} x{stack.amount}");
                 InGameHUDPatch.recentlyPickedUpItems.Add(new InGameHUDPatch.PickupNotifierEntry
                 {
-                    itemStack = stack,
+                    name = stack.GetItem().translatedName,
+                    amount = stack.amount,
                     displayTime = 2 // seconds
                 });
             }

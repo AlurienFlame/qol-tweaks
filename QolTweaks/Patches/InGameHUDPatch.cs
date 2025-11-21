@@ -13,7 +13,8 @@ internal static class InGameHUDPatch
 {
     public struct PickupNotifierEntry
     {
-        public ItemStack itemStack;
+        public string name;
+        public int amount;
         public double displayTime;
     }
     public static List<PickupNotifierEntry> recentlyPickedUpItems = new List<PickupNotifierEntry>();
@@ -40,9 +41,9 @@ internal static class InGameHUDPatch
         {
             for (int i = 0; i < recentlyPickedUpItems.Count; i++)
             {
-                var stack = recentlyPickedUpItems[i];
+                PickupNotifierEntry stack = recentlyPickedUpItems[i];
 
-                string text = $"{stack.itemStack.GetItem().translatedName} x{stack.itemStack.amount}"; // FIXME: amount is always 0
+                string text = $"{stack.name} x{stack.amount}"; // FIXME: amount is always 0
 
                 TextRenderer.DrawTextShadow(
                     text,
